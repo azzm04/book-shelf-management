@@ -12,7 +12,7 @@ export default function FavoritesPage() {
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       {/* Hero Section */}
       <section className="relative overflow-hidden border-b border-border/40">
-        <div className="absolute inset-0 bg-linear-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
 
         <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-32">
           <div className="flex flex-col items-center text-center space-y-8">
