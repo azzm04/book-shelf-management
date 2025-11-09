@@ -148,10 +148,9 @@ export default function ProfilePage() {
 
           <div className="space-y-4 text-muted-foreground leading-relaxed">
             <p>
-              <strong className="text-foreground">Perpustakaan Digital</strong>{" "}
-              adalah aplikasi yang menampilkan koleksi buku fiksi dan non-fiksi
-              Indonesia dengan fitur offline yang dapat diinstal di perangkat
-              Anda.
+              <strong className="text-foreground">Perpustakaan Digital</strong> adalah aplikasi Progressive Web App
+              (PWA) yang dibuat sebagai tugas praktikum Pemrograman Berbasis Platform. Aplikasi ini menampilkan koleksi
+              buku fiksi dan non-fiksi Indonesia dengan fitur offline yang dapat diinstall di perangkat Anda.
             </p>
             <p>
               Aplikasi ini dibangun menggunakan teknologi modern seperti
@@ -164,6 +163,7 @@ export default function ProfilePage() {
             {[
               "React.js",
               "Next.js",
+              "PWA",
               "Tailwind CSS",
               "Service Worker",
               "TypeScript",
