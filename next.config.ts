@@ -5,7 +5,7 @@ const pwaConfig= require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  enable: process.env.NODE_ENV === 'development', // Nonaktifkan PWA saat development
+  disable: process.env.NODE_ENV === 'development', // Nonaktifkan PWA saat development
 });
 
 // 3. Konfigurasi Next.js Anda
