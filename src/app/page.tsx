@@ -1,32 +1,35 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { BookOpen, Sparkles, Library, ArrowRight } from "lucide-react"
-import { BukuFiksi, BukuNonFiksi } from "@/data/buku"
-import BookCard from "@/components/buku/BookCard"
-import { SplashScreen } from "@/components/splash/splash-screen.tsx"
+import { useEffect, useState } from "react";
+import { BookOpen, Sparkles, Library, ArrowRight } from "lucide-react";
+import { BukuFiksi, BukuNonFiksi } from "@/data/buku";
+import BookCard from "@/components/buku/BookCard";
+import { SplashScreen } from "@/components/splash/splash-screen.tsx";
 
 export default function HomePage() {
   const [showSplash, setShowSplash] = useState(() => {
-    if (typeof window === "undefined") return true
-    return !localStorage.getItem("splash-shown")
-  })
+    if (typeof window === "undefined") return true;
+    return !localStorage.getItem("splash-shown");
+  });
 
   const handleSplashComplete = () => {
-    setShowSplash(false)
-    localStorage.setItem("splash-shown", "true")
-  }
+    setShowSplash(false);
+    localStorage.setItem("splash-shown", "true");
+  };
 
-  const bukuTerpilih = [...BukuFiksi.buku.slice(0, 2), ...BukuNonFiksi.buku.slice(0, 2)]
-  const totalBuku = BukuFiksi.buku.length + BukuNonFiksi.buku.length
+  const bukuTerpilih = [
+    ...BukuFiksi.buku.slice(0, 2),
+    ...BukuNonFiksi.buku.slice(0, 2),
+  ];
+  const totalBuku = BukuFiksi.buku.length + BukuNonFiksi.buku.length;
 
   if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />
+    return <SplashScreen onComplete={handleSplashComplete} />;
   }
 
   const handleLihatDetail = () => {
-    window.location.href = '/fiksi'
-  }
+    window.location.href = "/fiksi";
+  };
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
@@ -51,13 +54,16 @@ export default function HomePage() {
                 Perpustakaan Digital Anda
               </h1>
               <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
-                Jelajahi koleksi buku pilihan dari berbagai genre. Temukan inspirasi dan pengetahuan baru untuk
-                memperkaya wawasan Anda.
+                Jelajahi koleksi buku pilihan dari berbagai genre. Temukan
+                inspirasi dan pengetahuan baru untuk memperkaya wawasan Anda.
               </p>
             </div>
 
             {/* CTA Button */}
-            <button className="group px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary/20 transform hover:scale-105 inline-flex items-center gap-2">
+            <button
+              onClick={handleLihatDetail}
+              className="group px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-primary/20 transform hover:scale-105 inline-flex items-center gap-2"
+            >
               Mulai Jelajahi
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -77,7 +83,9 @@ export default function HomePage() {
                 <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
                   {totalBuku}
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Total Koleksi Buku</p>
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+                  Total Koleksi Buku
+                </p>
               </div>
             </div>
           </div>
@@ -92,7 +100,9 @@ export default function HomePage() {
                 <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
                   {BukuFiksi.buku.length}
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Koleksi Fiksi</p>
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+                  Koleksi Fiksi
+                </p>
               </div>
             </div>
           </div>
@@ -107,7 +117,9 @@ export default function HomePage() {
                 <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
                   {BukuNonFiksi.buku.length}
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Koleksi Non-Fiksi</p>
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+                  Koleksi Non-Fiksi
+                </p>
               </div>
             </div>
           </div>
@@ -119,10 +131,13 @@ export default function HomePage() {
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="h-1 w-8 sm:w-10 rounded-full bg-accent" />
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">Buku Pilihan</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+                Buku Pilihan
+              </h2>
             </div>
             <p className="text-xs sm:text-sm md:text-base text-muted-foreground ml-10 sm:ml-13 max-w-xl">
-              Koleksi buku terbaik yang kami rekomendasikan untuk memperluas wawasan Anda
+              Koleksi buku terbaik yang kami rekomendasikan untuk memperluas
+              wawasan Anda
             </p>
           </div>
 
@@ -147,12 +162,16 @@ export default function HomePage() {
                 Jelajahi Koleksi Lengkap
               </h3>
               <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-                Temukan lebih dari {totalBuku} buku menarik dari berbagai kategori. Pilih kategori di menu untuk melihat
-                koleksi lengkap kami dan temukan bacaan terbaik Anda.
+                Temukan lebih dari {totalBuku} buku menarik dari berbagai
+                kategori. Pilih kategori di menu untuk melihat koleksi lengkap
+                kami dan temukan bacaan terbaik Anda.
               </p>
             </div>
 
-            <button className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base bg-white text-primary hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 group">
+            <button
+              onClick={handleLihatDetail}
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base bg-white text-primary hover:bg-white/90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 group"
+            >
               Lihat Semua Buku
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -160,5 +179,5 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-  )
+  );
 }
