@@ -27,22 +27,22 @@ export default function FavoritesPage() {
             </div>
 
             {/* Heading */}
-            <div className="space-y-4 max-w-2xl">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-balance leading-tight text-foreground tracking-tight">
+            <div className="space-y-3 sm:space-y-4 max-w-2xl px-4 sm:px-0">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-balance leading-tight text-foreground tracking-tight">
                 Koleksi Favorit Saya
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 Buku-buku pilihan Anda yang tersimpan dalam koleksi pribadi untuk dibaca kapan saja.
               </p>
             </div>
 
             {/* Stats */}
-            <div className="inline-flex items-center gap-6 px-6 py-3 rounded-full bg-card border border-border/60 shadow-sm">
+            <div className="inline-flex items-center gap-4 sm:gap-6 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-card border border-border/60 shadow-sm text-sm sm:text-base">
               <div className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-accent" />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                 <span className="font-semibold text-foreground">{favorites.length}</span>
               </div>
-              <div className="w-px h-6 bg-border" />
+              <div className="w-px h-4 sm:h-6 bg-border" />
               <span className="text-muted-foreground">Buku Favorit</span>
             </div>
           </div>
@@ -55,11 +55,13 @@ export default function FavoritesPage() {
           <div className="space-y-12">
             {/* Section Header */}
             <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="h-1 w-10 rounded-full bg-accent" />
-                <h2 className="text-4xl md:text-5xl font-bold text-foreground">Buku Pilihan Anda</h2>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="h-1 w-8 sm:w-10 rounded-full bg-accent" />
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+                  Buku Pilihan Anda
+                </h2>
               </div>
-              <p className="text-muted-foreground md:text-lg ml-13">
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground ml-10 sm:ml-13">
                 Total {favorites.length} buku yang sudah Anda tambahkan ke koleksi favorit
               </p>
             </div>
@@ -83,15 +85,15 @@ export default function FavoritesPage() {
 
             {/* Content */}
             <div className="relative z-10 space-y-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted border border-border/60">
-                <Heart className="w-8 h-8 text-muted-foreground" />
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-muted border border-border/60">
+                <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
               </div>
 
-              <div className="space-y-4">
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground text-balance leading-tight">
+              <div className="space-y-3 sm:space-y-4">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-balance leading-tight">
                   Belum Ada Favorit
                 </h2>
-                <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+                <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
                   Mulai jelajahi koleksi buku kami dan tambahkan buku favorit Anda dengan mengklik tombol love di setiap
                   kartu buku.
                 </p>

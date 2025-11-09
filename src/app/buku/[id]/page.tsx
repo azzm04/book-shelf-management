@@ -20,8 +20,12 @@ export default function BookDetailPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center pb-20 md:pb-0">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-foreground">Buku Tidak Ditemukan</h1>
-          <p className="text-muted-foreground">Maaf, buku yang Anda cari tidak ada di koleksi kami.</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+            Buku Tidak Ditemukan
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Maaf, buku yang Anda cari tidak ada di koleksi kami.
+          </p>
           <button
             onClick={() => router.back()}
             className="px-6 py-2.5 rounded-lg font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors inline-flex items-center gap-2"
@@ -63,7 +67,7 @@ export default function BookDetailPage() {
           {/* Left - Book Cover */}
           <div className="flex justify-center md:sticky md:top-24 md:h-fit">
             <div className="w-full md:w-auto">
-              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-border bg-muted aspect-[3/4] md:max-w-sm">
+              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-border bg-muted aspect-[3/4] md:max-w-sm max-w-xs">
                 <img src={buku.cover || "/placeholder.svg"} alt={buku.judul} className="w-full h-full object-cover" />
               </div>
 
@@ -71,17 +75,17 @@ export default function BookDetailPage() {
               <div className="flex gap-3 mt-6 md:hidden">
                 <button
                   onClick={toggleFavorite}
-                  className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2 ${
+                  className={`flex-1 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-semibold text-sm transition-all duration-300 inline-flex items-center justify-center gap-2 ${
                     bookIsFavorited
                       ? "bg-red-500 text-white hover:bg-red-600"
                       : "bg-muted text-foreground hover:bg-muted/80 border border-border"
                   }`}
                 >
-                  <Heart className={`w-5 h-5 ${bookIsFavorited ? "fill-current" : ""}`} />
+                  <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${bookIsFavorited ? "fill-current" : ""}`} />
                   {bookIsFavorited ? "Disimpan" : "Simpan"}
                 </button>
-                <button className="flex-1 px-4 py-3 rounded-lg font-semibold bg-accent text-accent-foreground hover:bg-accent/90 transition-colors inline-flex items-center justify-center gap-2">
-                  <Download className="w-5 h-5" />
+                <button className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-semibold text-sm bg-accent text-accent-foreground hover:bg-accent/90 transition-colors inline-flex items-center justify-center gap-2">
+                  <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                   Baca
                 </button>
               </div>
@@ -92,64 +96,66 @@ export default function BookDetailPage() {
           <div className="md:col-span-2 space-y-8">
             {/* Title and Author */}
             <div className="space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">{buku.judul}</h1>
-                <p className="text-lg text-muted-foreground">oleh {buku.penulis}</p>
+              <div className="space-y-2 sm:space-y-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                  {buku.judul}
+                </h1>
+                <p className="text-sm sm:text-base md:text-lg text-muted-foreground">oleh {buku.penulis}</p>
               </div>
 
               {/* Meta Info */}
-              <div className="flex flex-wrap gap-4 pt-4 border-t border-border/60">
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Penerbit</p>
-                  <p className="font-semibold text-foreground">{buku.penerbit}</p>
+              <div className="flex flex-wrap gap-4 sm:gap-5 pt-4 sm:pt-5 border-t border-border/60">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <p className="text-xs sm:text-sm text-muted-foreground">Penerbit</p>
+                  <p className="text-sm sm:text-base font-semibold text-foreground">{buku.penerbit}</p>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Tahun Terbit</p>
-                  <p className="font-semibold text-foreground">{buku.tahun}</p>
+                <div className="space-y-0.5 sm:space-y-1">
+                  <p className="text-xs sm:text-sm text-muted-foreground">Tahun Terbit</p>
+                  <p className="text-sm sm:text-base font-semibold text-foreground">{buku.tahun}</p>
                 </div>
               </div>
             </div>
 
             {/* Description */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">Deskripsi</h2>
-              <p className="text-foreground/80 leading-relaxed text-lg">{buku.deskripsi}</p>
+            <div className="space-y-4 sm:space-y-5">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">Deskripsi</h2>
+              <p className="text-foreground/80 leading-relaxed text-sm sm:text-base md:text-lg">{buku.deskripsi}</p>
             </div>
 
             {/* Additional Info Sections */}
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">Informasi Tambahan</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-muted/50 rounded-lg p-4 border border-border/60">
-                  <p className="text-sm text-muted-foreground">ID Buku</p>
-                  <p className="font-semibold text-foreground">{buku.id}</p>
+            <div className="space-y-4 sm:space-y-5">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">Informasi Tambahan</h2>
+              <div className="grid grid-cols-2 gap-4 sm:gap-5">
+                <div className="bg-muted/50 rounded-lg p-4 sm:p-5 border border-border/60">
+                  <p className="text-sm sm:text-base text-muted-foreground">ID Buku</p>
+                  <p className="font-semibold text-sm sm:text-base text-foreground">{buku.id}</p>
                 </div>
-                <div className="bg-muted/50 rounded-lg p-4 border border-border/60">
-                  <p className="text-sm text-muted-foreground">Status</p>
-                  <p className="font-semibold text-accent">Tersedia</p>
+                <div className="bg-muted/50 rounded-lg p-4 sm:p-5 border border-border/60">
+                  <p className="text-sm sm:text-base text-muted-foreground">Status</p>
+                  <p className="font-semibold text-sm sm:text-base text-accent">Tersedia</p>
                 </div>
               </div>
             </div>
 
             {/* Action buttons for desktop */}
-            <div className="hidden md:flex gap-4 pt-4">
+            <div className="hidden md:flex gap-4 sm:gap-5 pt-4 sm:pt-6">
               <button
                 onClick={toggleFavorite}
-                className={`px-8 py-3.5 rounded-lg font-semibold transition-all duration-300 inline-flex items-center gap-2 border ${
+                className={`px-8 sm:px-9 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base transition-all duration-300 inline-flex items-center gap-2 border ${
                   bookIsFavorited
                     ? "bg-red-500 text-white hover:bg-red-600 border-red-500"
                     : "bg-background text-foreground hover:bg-muted border-border"
                 }`}
               >
-                <Heart className={`w-5 h-5 ${bookIsFavorited ? "fill-current" : ""}`} />
+                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${bookIsFavorited ? "fill-current" : ""}`} />
                 {bookIsFavorited ? "Disimpan" : "Simpan"}
               </button>
-              <button className="px-8 py-3.5 rounded-lg font-semibold bg-accent text-accent-foreground hover:bg-accent/90 transition-colors inline-flex items-center gap-2">
-                <Download className="w-5 h-5" />
+              <button className="px-8 sm:px-9 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base bg-accent text-accent-foreground hover:bg-accent/90 transition-colors inline-flex items-center gap-2">
+                <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                 Baca Sekarang
               </button>
-              <button className="px-8 py-3.5 rounded-lg font-semibold bg-muted text-foreground hover:bg-muted/80 transition-colors inline-flex items-center gap-2 border border-border">
-                <Share2 className="w-5 h-5" />
+              <button className="px-8 sm:px-9 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base bg-muted text-foreground hover:bg-muted/80 transition-colors inline-flex items-center gap-2 border border-border">
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                 Bagikan
               </button>
             </div>
@@ -158,7 +164,9 @@ export default function BookDetailPage() {
 
         {/* Related Books Section */}
         <div className="mt-20 pt-12 border-t border-border/40">
-          <h2 className="text-3xl font-bold text-foreground mb-8">Buku Lainnya dari Penulis yang Sama</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-6 sm:mb-8">
+            Buku Lainnya dari Penulis yang Sama
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {allBooks
               .filter((b) => b.penulis === buku.penulis && b.id !== buku.id)
@@ -169,16 +177,16 @@ export default function BookDetailPage() {
                   onClick={() => router.push(`/buku/${book.id}`)}
                   className="group cursor-pointer rounded-lg overflow-hidden border border-border hover:border-primary/40 transition-all duration-300"
                 >
-                  <div className="aspect-3/4 overflow-hidden bg-muted">
+                  <div className="aspect-[3/4] overflow-hidden bg-muted">
                     <img
                       src={book.cover || "/placeholder.svg"}
                       alt={book.judul}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <div className="p-3 bg-card">
-                    <h3 className="font-bold text-sm line-clamp-2 text-foreground">{book.judul}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{book.penulis}</p>
+                  <div className="p-3 sm:p-4 bg-card">
+                    <h3 className="font-bold text-xs sm:text-sm line-clamp-2 text-foreground">{book.judul}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">{book.penulis}</p>
                   </div>
                 </div>
               ))}

@@ -37,16 +37,18 @@ export default function NonFiksiPage() {
         <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-28">
           <div className="space-y-8">
             {/* Header with Icon */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
               <div className="relative">
                 <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-xl" />
-                <div className="relative bg-accent/10 border border-accent/20 backdrop-blur-sm p-4 rounded-2xl">
-                  <BookOpen className="w-8 h-8 text-accent" />
+                <div className="relative bg-accent/10 border border-accent/20 backdrop-blur-sm p-3 sm:p-4 rounded-2xl">
+                  <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
                 </div>
               </div>
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-foreground">Koleksi Buku Non-Fiksi</h1>
-                <p className="text-muted-foreground mt-2">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+                  Koleksi Buku Non-Fiksi
+                </h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">
                   {filteredBuku.length} dari {allBuku.length} buku tersedia
                 </p>
               </div>
@@ -81,7 +83,9 @@ export default function NonFiksiPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border border-primary/20 mb-4">
               <BookOpen className="w-8 h-8 text-primary" />
             </div>
-            <p className="text-foreground text-lg font-semibold mt-4">Tidak ada buku yang ditemukan</p>
+            <p className="text-foreground text-sm sm:text-base md:text-lg font-semibold mt-4">
+              Tidak ada buku yang ditemukan
+            </p>
             <p className="text-muted-foreground mt-2">Coba kata kunci pencarian yang berbeda</p>
           </div>
         )}
@@ -93,10 +97,10 @@ export default function NonFiksiPage() {
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full -ml-48 -mb-48 blur-3xl" />
 
           <div className="relative z-10 space-y-6">
-            <h3 className="text-3xl md:text-4xl font-bold text-white text-balance leading-tight">
+            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white text-balance leading-tight">
               Perluas Wawasan Anda
             </h3>
-            <p className="text-white/80 text-lg max-w-2xl mx-auto">
+            <p className="text-white/80 text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
               Belajar dan berkembang melalui koleksi buku non-fiksi berkualitas tinggi kami
             </p>
           </div>

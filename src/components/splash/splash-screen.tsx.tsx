@@ -28,44 +28,40 @@ export function SplashScreen({ onComplete }: { onComplete: () => void }) {
         fadeOut ? "opacity-0" : "opacity-100"
       }`}
     >
-      {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-32 right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse delay-700" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center space-y-8">
-        {/* Logo */}
+      <div className="relative z-10 text-center space-y-6 sm:space-y-8 px-4">
         <div className="inline-flex items-center justify-center">
           <div className="relative">
             <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-2xl" />
-            <div className="relative bg-gradient-to-br from-accent/20 to-accent/5 backdrop-blur-xl p-6 rounded-2xl border border-accent/20">
-              <BookOpen className="w-16 h-16 text-accent animate-bounce" />
+            <div className="relative bg-gradient-to-br from-accent/20 to-accent/5 backdrop-blur-xl p-4 sm:p-6 rounded-2xl border border-accent/20">
+              <BookOpen className="w-12 h-12 sm:w-16 sm:h-16 text-accent animate-bounce" />
             </div>
           </div>
         </div>
 
-        {/* Title */}
-        <div className="space-y-2">
-          <h1 className="text-5xl md:text-6xl font-bold text-white text-balance">Perpustakaan Digital</h1>
-          <p className="text-lg text-slate-300">Koleksi Buku Favoritmu</p>
+        <div className="space-y-1 sm:space-y-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white text-balance">
+            Perpustakaan Digital
+          </h1>
+          <p className="text-xs sm:text-sm md:text-base text-slate-300">Koleksi Buku Favoritmu</p>
         </div>
 
-        {/* Loading bar */}
-        <div className="w-64 space-y-3">
+        <div className="w-56 sm:w-64 space-y-3">
           <div className="h-1.5 w-full bg-slate-700/50 rounded-full overflow-hidden backdrop-blur-sm">
             <div
               className="h-full bg-gradient-to-r from-accent to-primary rounded-full transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-sm text-slate-400">Memuat... {Math.floor(progress)}%</p>
+          <p className="text-xs sm:text-sm text-slate-400">Memuat... {Math.floor(progress)}%</p>
         </div>
       </div>
 
-      {/* Footer text */}
-      <div className="absolute bottom-8 text-slate-500 text-sm">Powered by PWA Technology</div>
+      <div className="absolute bottom-8 text-slate-500 text-xs sm:text-sm">Powered by PWA Technology</div>
     </div>
   )
 }

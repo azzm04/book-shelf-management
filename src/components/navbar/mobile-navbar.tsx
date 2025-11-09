@@ -33,7 +33,7 @@ export default function MobileNavbar({ currentPage }: MobileNavbarProps) {
             >
               {/* Icon with active indicator */}
               <div className={`relative ${isActive ? "transform -translate-y-0.5" : ""}`}>
-                <Icon className={`w-6 h-6 ${isActive ? "stroke-[2.5]" : "stroke-2"}`} />
+                <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isActive ? "stroke-[2.5]" : "stroke-2"}`} />
                 {isActive && (
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
                 )}

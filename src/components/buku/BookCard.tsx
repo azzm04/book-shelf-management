@@ -42,7 +42,7 @@ export default function BookCard({ buku }: BookCardProps) {
   return (
     <div className="group relative h-full flex flex-col rounded-xl border border-border bg-card overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/40">
       {/* Book Cover Image */}
-      <div className="relative h-48 w-full overflow-hidden bg-muted">
+      <div className="relative h-40 sm:h-48 w-full overflow-hidden bg-muted">
         <img
           src={buku.cover || "/placeholder.svg"}
           alt={buku.judul}
@@ -56,7 +56,7 @@ export default function BookCard({ buku }: BookCardProps) {
           aria-label="Add to favorites"
         >
           <Heart
-            className={`w-5 h-5 transition-colors duration-200 ${
+            className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200 ${
               isFav ? "fill-red-500 text-red-500" : "text-muted-foreground"
             }`}
           />
@@ -66,7 +66,7 @@ export default function BookCard({ buku }: BookCardProps) {
       {/* Book Info */}
       <div className="flex flex-col flex-grow p-4 space-y-3">
         <div className="space-y-1">
-          <h3 className="font-bold text-foreground line-clamp-2 text-sm hover:text-primary transition-colors">
+          <h3 className="font-bold text-foreground line-clamp-2 text-xs sm:text-sm hover:text-primary transition-colors">
             {buku.judul}
           </h3>
           <p className="text-xs text-muted-foreground">{buku.penulis}</p>
@@ -84,7 +84,7 @@ export default function BookCard({ buku }: BookCardProps) {
       <div className="p-4 border-t border-border bg-muted/50">
         <button
           onClick={handleLihatDetail}
-          className="w-full px-3 py-2 rounded-md text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300"
+          className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300"
         >
           Lihat Detail
         </button>
