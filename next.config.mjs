@@ -1,33 +1,33 @@
-import withPWA from 'next-pwa';
+// next.config.mjs
+import withPWAInit from '@ducanh2912/next-pwa';
+
+const withPWA = withPWAInit({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  register: true,
+  skipWaiting: true,
+  fallback: {
+    document: "/offline",
+  },
+  workboxOptions: {
+    runtimeCaching: [
+      {
+        urlPattern: /^https?.*/, // Match semua request
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'offlineCache',
+          expiration: {
+            maxEntries: 200,
+          },
+        },
+      },
+    ],
+  },
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
 };
 
-const runtimeCaching = [
-  {
-    urlPattern: /\/$/,
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'html-cache',
-      expiration: { maxEntries: 10 }
-    }
-  },
-  {
-    urlPattern: /^https?:.*\.(?:png|jpg|jpeg|svg|gif|js|css)$/,
-    handler: 'StaleWhileRevalidate',
-    options: {
-      cacheName: 'asset-cache',
-      expiration: { maxEntries: 200 }
-    }
-  }
-];
-
-export default withPWA({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV !== 'production',
-  runtimeCaching
-})(nextConfig);
+export default withPWA(nextConfig);

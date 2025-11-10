@@ -1,10 +1,9 @@
+// app/layout.tsx (Server Component - tanpa 'use client')
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import Navbar from "@/components/navbar/navbar";
-import { FavoritesProvider } from "@/app/context/FavoritesContext";
-
+import ClientLayout from "./ClientLayout";
 
 export const metadata: Metadata = {
   title: "MyApp-Library",
@@ -12,10 +11,10 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: "/android-chrome-512x512.png",
-    apple: "/android-chrome-512x512.png",
     shortcut: "/android-chrome-512x512.png",
+    apple: "/apple-touch-icon.png", // ← Penting!
   },
-    appleWebApp: {
+  appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "MyApp-Library",
@@ -31,16 +30,13 @@ export const viewport = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      
-      {" "}
-      <body className={`font-sans antialiased`}>
-      {" "}
-        <FavoritesProvider>
-      <Navbar /> {children}{" "}
-        </FavoritesProvider>
-        <Analytics />{" "}
+      <head>
+        {/* Meta tags tambahan jika diperlukan */}
+      </head>
+      <body className="font-sans antialiased">
+        <ClientLayout>{children}</ClientLayout>
+        <Analytics />
       </body>
-      {" "}
     </html>
   );
 }
