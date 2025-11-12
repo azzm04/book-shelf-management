@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import { Toaster } from "sonner";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 export const metadata: Metadata = {
   title: "MyApp-Library",
@@ -31,10 +33,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
-        {/* Meta tags tambahan jika diperlukan */}
       </head>
       <body className="font-sans antialiased">
+        <FavoritesProvider>
         <ClientLayout>{children}</ClientLayout>
+        <Toaster />
+        </FavoritesProvider>
         <Analytics />
       </body>
     </html>

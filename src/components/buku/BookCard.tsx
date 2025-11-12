@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation"
 import { Heart, BookOpen, Share2 } from "lucide-react"
 import { useFavorites } from "./../../app/context/FavoritesContext"
 import { generateShareUrl, copyToClipboard } from "@/app/utils/shareUtils"
+import { toast } from "sonner"
+
 
 
 interface Buku {
@@ -55,11 +57,14 @@ export default function BookCard({ buku }: BookCardProps) {
     const success = await copyToClipboard(shareUrl)
 
     if (success) {
-      setShareMessage("Link berhasil disalin!")
-      setTimeout(() => setShareMessage(""), 2000)
+      toast.success("Link sudah berhasil di salin", {
+        description: shareUrl,
+        duration: 3000,
+      })
     } else {
-      setShareMessage("Gagal menyalin link")
-      setTimeout(() => setShareMessage(""), 2000)
+      toast.error("Gagal menyalin link", {
+        duration: 2000,
+      })
     }
   }
 
