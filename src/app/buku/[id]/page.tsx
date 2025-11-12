@@ -5,6 +5,7 @@ import { BukuFiksi, BukuNonFiksi } from "@/data/buku"
 import { useFavorites } from "@/app/context/FavoritesContext"
 import { generateShareUrl, copyToClipboard } from "@/app/utils/shareUtils"
 import { useState } from "react"
+import { toast } from "sonner"
 
 export default function BookDetailPage() {
   const params = useParams()
@@ -53,16 +54,19 @@ export default function BookDetailPage() {
     window.open(buku.bacaUrl, "_blank")
   }
 
-  const handleBagikanSekarang = async () => {
+  const handleBagikan = async (e: React.MouseEvent) => {
+    e.stopPropagation()
     const shareUrl = generateShareUrl(buku.id)
     const success = await copyToClipboard(shareUrl)
 
     if (success) {
-      setShareMessage("Link berhasil disalin!")
-      setTimeout(() => setShareMessage(""), 2000)
+      toast.success("Link sudah berhasil di salin", {
+        duration: 3000,
+      })
     } else {
-      setShareMessage("Gagal menyalin link")
-      setTimeout(() => setShareMessage(""), 2000)
+      toast.error("Gagal menyalin link", {
+        duration: 2000,
+      })
     }
   }
 
@@ -112,7 +116,7 @@ export default function BookDetailPage() {
                   Baca Sekarang
                 </button>
                 <button
-                  onClick={handleBagikanSekarang}
+                  onClick={handleBagikan}
                   className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-semibold text-sm bg-muted text-foreground hover:bg-muted/80 transition-colors inline-flex items-center justify-center gap-2 border border-border"
                 >
                   <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -189,7 +193,7 @@ export default function BookDetailPage() {
                 Baca Sekarang
               </button>
               <button
-                onClick={handleBagikanSekarang}
+                onClick={handleBagikan}
                 className="px-8 sm:px-9 py-2.5 sm:py-3.5 rounded-lg font-semibold text-sm sm:text-base bg-muted text-foreground hover:bg-muted/80 transition-colors inline-flex items-center gap-2 border border-border"
               >
                 <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />

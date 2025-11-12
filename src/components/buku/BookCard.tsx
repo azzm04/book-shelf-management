@@ -58,7 +58,6 @@ export default function BookCard({ buku }: BookCardProps) {
 
     if (success) {
       toast.success("Link sudah berhasil di salin", {
-        description: shareUrl,
         duration: 3000,
       })
     } else {
