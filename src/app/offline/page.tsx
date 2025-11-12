@@ -3,7 +3,7 @@
 
 export default function Offline() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 to-blue-600 text-white p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-linear-gradient-to-br from-purple-500 to-blue-600 text-white p-4">
       <div className="text-center">
         <div className="text-8xl mb-6">📵</div>
         <h1 className="text-4xl font-bold mb-4">Anda Sedang Offline</h1>

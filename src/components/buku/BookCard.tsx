@@ -92,7 +92,7 @@ export default function BookCard({ buku }: BookCardProps) {
       </div>
 
       {/* Book Info */}
-      <div className="flex flex-col flex-grow p-4 space-y-3">
+      <div className="flex flex-col grow p-4 space-y-3">
         <div className="space-y-1">
           <h3 className="font-bold text-foreground line-clamp-2 text-xs sm:text-sm hover:text-primary transition-colors">
             {buku.judul}
@@ -100,7 +100,7 @@ export default function BookCard({ buku }: BookCardProps) {
           <p className="text-xs text-muted-foreground">{buku.penulis}</p>
         </div>
 
-        <p className="text-xs text-muted-foreground line-clamp-2 flex-grow">{buku.deskripsi}</p>
+        <p className="text-xs text-muted-foreground line-clamp-2 grow">{buku.deskripsi}</p>
 
         <div className="flex items-center justify-between pt-2 border-t border-border">
           <span className="text-xs text-muted-foreground">{buku.penerbit}</span>

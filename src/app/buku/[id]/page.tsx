@@ -91,7 +91,7 @@ export default function BookDetailPage() {
           {/* Left - Book Cover */}
           <div className="flex justify-center md:sticky md:top-24 md:h-fit">
             <div className="w-full md:w-auto">
-              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-border bg-muted aspect-[3/4] md:max-w-sm max-w-xs">
+              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-border bg-muted aspect-3/4 md:max-w-sm max-w-xs">
                 <img src={buku.cover || "/placeholder.svg"} alt={buku.judul} className="w-full h-full object-cover" />
               </div>
 
@@ -219,7 +219,7 @@ export default function BookDetailPage() {
                   onClick={() => router.push(`/buku/${book.id}`)}
                   className="group cursor-pointer rounded-lg overflow-hidden border border-border hover:border-primary/40 transition-all duration-300"
                 >
-                  <div className="aspect-[3/4] overflow-hidden bg-muted">
+                  <div className="aspect-3/4 overflow-hidden bg-muted">
                     <img
                       src={book.cover || "/placeholder.svg"}
                       alt={book.judul}
