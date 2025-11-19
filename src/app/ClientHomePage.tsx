@@ -14,21 +14,34 @@ interface ClientHomePageProps {
   totalNonFiksi: number;
 }
 
+
 export default function ClientHomePage({
   bukuTerpilih,
   totalBuku,
   totalFiksi,
   totalNonFiksi,
 }: ClientHomePageProps) {
-  const [showSplash, setShowSplash] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return !localStorage.getItem("splash-shown");
-  });
+  const [hydrated, setHydrated] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Only run on client — AFTER hydration
+  useEffect(() => {
+    setHydrated(true);
+
+    const alreadyShown = localStorage.getItem("splash-shown");
+    if (alreadyShown) {
+      setShowSplash(false);
+    } else {
+      setShowSplash(true);
+    }
+  }, []);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
     localStorage.setItem("splash-shown", "true");
   };
+
+  if (!hydrated) return null;
 
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />;

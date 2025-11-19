@@ -2,20 +2,18 @@
 import { BukuAPI } from "@/lib/api/buku";
 import NonFiksiClientPage from "./NonFiksiClientPage";
 
+// Force dynamic rendering
 export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: "Koleksi Buku Non-Fiksi - MyApp Library",
-  description: "Jelajahi koleksi buku non-fiksi untuk memperluas wawasan Anda",
-};
+export const revalidate = 0;
 
 export default async function NonFiksiPage() {
-  try {
-    const bukuNonFiksi = await BukuAPI.getBukuNonFiksi();
+  console.log("=== RENDERING NON-FIKSI PAGE ===");
+  
+  // Fetch buku non-fiksi dari Supabase
+  const bukuNonFiksi = await BukuAPI.getBukuNonFiksi();
+  
+  console.log("Non-Fiksi page - Books received:", bukuNonFiksi.length);
+  console.log("Non-Fiksi page - Books:", bukuNonFiksi.map(b => ({ judul: b.judul, category: b.category?.name })));
 
-    return <NonFiksiClientPage initialBuku={bukuNonFiksi} />;
-  } catch (error) {
-    console.error("Error loading non-fiksi books:", error);
-    return <NonFiksiClientPage initialBuku={[]} />;
-  }
+  return <NonFiksiClientPage initialBuku={bukuNonFiksi} />;
 }

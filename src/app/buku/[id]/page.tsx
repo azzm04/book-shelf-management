@@ -4,38 +4,31 @@ import { BukuAPI } from "@/lib/api/buku";
 import BookDetailClient from "./BookDetailClient";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-// Generate metadata untuk SEO
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const buku = await BukuAPI.getBukuById(params.id);
-
-  if (!buku) {
-    return {
-      title: "Buku Tidak Ditemukan",
-    };
-  }
-
-  return {
-    title: `${buku.judul} - ${buku.penulis}`,
-    description: buku.deskripsi || `Buku ${buku.judul} oleh ${buku.penulis}`,
+interface BookDetailPageProps {
+  params: {
+    id: string;
   };
 }
 
-export default async function BookDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const buku = await BukuAPI.getBukuById(params.id);
+export default async function BookDetailPage({ params }: BookDetailPageProps) {
+  const { id } = params;
 
+  // Fetch detail buku dari Supabase
+  const buku = await BukuAPI.getBukuById(id);
+
+  // Jika buku tidak ditemukan, tampilkan halaman 404
   if (!buku) {
     notFound();
   }
 
-  // Fetch buku lain dari penulis yang sama
+  // Fetch buku terkait (buku dari penulis yang sama)
   const allBuku = await BukuAPI.getAllBuku();
   const relatedBooks = allBuku
-    .filter((b) => b.penulis === buku.penulis && b.id !== buku.id)
+    .filter(
+      (b) => b.id !== buku.id && b.penulis.toLowerCase() === buku.penulis.toLowerCase()
+    )
     .slice(0, 4);
 
   return <BookDetailClient buku={buku} relatedBooks={relatedBooks} />;
