@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { Heart, ArrowRight } from "lucide-react"
-import { useFavorites } from "@/app/context/FavoritesContext"
-import BookCard from "@/components/buku/BookCard"
-import Link from "next/link"
+import { Heart, ArrowRight } from "lucide-react";
+import { useFavorites } from "@/app/context/FavoritesContext";
+import BookCard from "@/components/buku/BookCard";
+import Link from "next/link";
 
 export default function FavoritesPage() {
-  const { favorites } = useFavorites()
+  const { favorites } = useFavorites();
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       {/* Hero Section */}
       <section className="relative overflow-hidden border-b border-border/40">
-        <div className="absolute inset-0 bg-linear-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
 
         <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-32">
           <div className="flex flex-col items-center text-center space-y-8">
@@ -32,7 +32,8 @@ export default function FavoritesPage() {
                 Koleksi Favorit Saya
               </h1>
               <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
-                Buku-buku pilihan Anda yang tersimpan dalam koleksi pribadi untuk dibaca kapan saja.
+                Buku-buku pilihan Anda yang tersimpan dalam koleksi pribadi
+                untuk dibaca kapan saja.
               </p>
             </div>
 
@@ -40,7 +41,9 @@ export default function FavoritesPage() {
             <div className="inline-flex items-center gap-4 sm:gap-6 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-card border border-border/60 shadow-sm text-sm sm:text-base">
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
-                <span className="font-semibold text-foreground">{favorites.length}</span>
+                <span className="font-semibold text-foreground">
+                  {favorites.length}
+                </span>
               </div>
               <div className="w-px h-4 sm:h-6 bg-border" />
               <span className="text-muted-foreground">Buku Favorit</span>
@@ -62,7 +65,8 @@ export default function FavoritesPage() {
                 </h2>
               </div>
               <p className="text-xs sm:text-sm md:text-base text-muted-foreground ml-10 sm:ml-13">
-                Total {favorites.length} buku yang sudah Anda tambahkan ke koleksi favorit
+                Total {favorites.length} buku yang sudah Anda tambahkan ke
+                koleksi favorit
               </p>
             </div>
 
@@ -78,7 +82,7 @@ export default function FavoritesPage() {
         </section>
       ) : (
         <section className="max-w-6xl mx-auto px-4 md:px-8 py-20 md:py-32">
-          <div className="relative overflow-hidden bg-linear-gradient-to-br from-muted via-muted/50 to-muted rounded-2xl px-8 md:px-16 py-20 md:py-28 text-center border border-border/60">
+          <div className="relative overflow-hidden bg-gradient-to-br from-muted via-muted/50 to-muted rounded-2xl px-8 md:px-16 py-20 md:py-28 text-center border border-border/60">
             {/* Background accents */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full -mr-48 -mt-48 blur-3xl" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full -ml-48 -mb-48 blur-3xl" />
@@ -94,8 +98,8 @@ export default function FavoritesPage() {
                   Belum Ada Favorit
                 </h2>
                 <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-                  Mulai jelajahi koleksi buku kami dan tambahkan buku favorit Anda dengan mengklik tombol love di setiap
-                  kartu buku.
+                  Mulai jelajahi koleksi buku kami dan tambahkan buku favorit
+                  Anda dengan mengklik tombol love di setiap kartu buku.
                 </p>
               </div>
 
@@ -111,5 +115,5 @@ export default function FavoritesPage() {
         </section>
       )}
     </div>
-  )
+  );
 }

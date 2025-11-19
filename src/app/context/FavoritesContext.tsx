@@ -1,78 +1,76 @@
-"use client"
+// app/context/FavoritesContext.tsx
+"use client";
 
-import type React from "react"
-
-import { createContext, useContext, useState, useEffect } from "react"
-
-interface Buku {
-  id: number
-  judul: string
-  penulis: string
-  penerbit: string
-  tahun: number
-  deskripsi: string
-  cover: string
-}
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import type { Buku } from "@/types/buku";
 
 interface FavoritesContextType {
-  favorites: Buku[]
-  addFavorite: (buku: Buku) => void
-  removeFavorite: (id: number) => void
-  isFavorite: (id: number) => boolean
+  favorites: Buku[];
+  addFavorite: (buku: Buku) => void;
+  removeFavorite: (id: string) => void;
+  isFavorite: (id: string) => boolean;
 }
 
-const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined)
+const FavoritesContext = createContext<FavoritesContextType | undefined>(
+  undefined
+);
 
-export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favorites, setFavorites] = useState<Buku[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
+export function FavoritesProvider({ children }: { children: ReactNode }) {
+  const [favorites, setFavorites] = useState<Buku[]>([]);
 
+  // Load from localStorage on mount
   useEffect(() => {
-    const savedFavorites = localStorage.getItem("favorites")
-    if (savedFavorites) {
+    const stored = localStorage.getItem("favorites");
+    if (stored) {
       try {
-        setFavorites(JSON.parse(savedFavorites))
-      } catch {
-        console.error("Failed to parse favorites from localStorage")
+        setFavorites(JSON.parse(stored));
+      } catch (error) {
+        console.error("Error loading favorites:", error);
       }
     }
-    setIsLoaded(true)
-  }, [])
+  }, []);
 
+  // Save to localStorage whenever favorites change
   useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem("favorites", JSON.stringify(favorites))
-    }
-  }, [favorites, isLoaded])
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   const addFavorite = (buku: Buku) => {
     setFavorites((prev) => {
-      if (!prev.find((b) => b.id === buku.id)) {
-        return [...prev, buku]
+      if (prev.some((f) => f.id === buku.id)) {
+        return prev;
       }
-      return prev
-    })
-  }
+      return [...prev, buku];
+    });
+  };
 
-  const removeFavorite = (id: number) => {
-    setFavorites((prev) => prev.filter((b) => b.id !== id))
-  }
+  const removeFavorite = (id: string) => {
+    setFavorites((prev) => prev.filter((f) => f.id !== id));
+  };
 
-  const isFavorite = (id: number) => {
-    return favorites.some((b) => b.id === id)
-  }
+  const isFavorite = (id: string) => {
+    return favorites.some((f) => f.id === id);
+  };
 
   return (
-    <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite, isFavorite }}>
+    <FavoritesContext.Provider
+      value={{ favorites, addFavorite, removeFavorite, isFavorite }}
+    >
       {children}
     </FavoritesContext.Provider>
-  )
+  );
 }
 
 export function useFavorites() {
-  const context = useContext(FavoritesContext)
+  const context = useContext(FavoritesContext);
   if (context === undefined) {
-    throw new Error("useFavorites must be used within a FavoritesProvider")
+    throw new Error("useFavorites must be used within a FavoritesProvider");
   }
-  return context
+  return context;
 }
