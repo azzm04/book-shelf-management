@@ -57,7 +57,7 @@ export default function ClientHomePage({
 
             <div className="space-y-3 sm:space-y-4 max-w-2xl">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-balance leading-tight text-foreground tracking-tight">
-                Perpustakaan Digital Anda
+                Book Shelf Management
               </h1>
               <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 Jelajahi koleksi buku pilihan dari berbagai genre. Temukan
@@ -139,10 +139,10 @@ export default function ClientHomePage({
                 Buku Pilihan
               </h2>
             </div>
-            <p className="text-xs sm:text-sm md:text-base text-muted-foreground ml-10 sm:ml-13 max-w-xl">
+            <h1 className="text-xs sm:text-sm md:text-base text-muted-foreground ml-10 sm:ml-13 max-w-xl">
               Koleksi buku terbaik yang kami rekomendasikan untuk memperluas
               wawasan Anda
-            </p>
+            </h1>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
