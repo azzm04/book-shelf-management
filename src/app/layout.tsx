@@ -8,18 +8,18 @@ import { Toaster } from "sonner";
 import { FavoritesProvider } from "./context/FavoritesContext";
 
 export const metadata: Metadata = {
-  title: "MyApp-Library",
+  title: "Book Shelf Management",
   description: "Collection of favorite books",
   manifest: "/manifest.json",
   icons: {
     icon: "/android-chrome-512x512.png",
     shortcut: "/android-chrome-512x512.png",
-    apple: "/apple-touch-icon.png", // ← Penting!
+    apple: "/apple-touch-icon.png",
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "MyApp-Library",
+    title: "Book Shelf Management",
   },
 };
 
