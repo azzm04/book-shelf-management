@@ -34,7 +34,7 @@ export default async function EditBukuPage({
   params: { id: string };
 }) {
   try {
-    console.log('📖 Fetching book for edit, ID:', params.id);
+    // console.log('📖 Fetching book for edit, ID:', params.id);
     const buku = await BukuAPI.getBukuById(params.id);
 
     if (!buku) {
@@ -42,7 +42,7 @@ export default async function EditBukuPage({
       notFound();
     }
 
-    console.log('✅ Book found:', buku.judul);
+    // console.log('✅ Book found:', buku.judul);
     return <EditBukuClient buku={buku} />;
   } catch (error) {
     console.error('❌ Error loading book:', error);

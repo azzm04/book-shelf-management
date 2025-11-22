@@ -1,9 +1,8 @@
-    // app/edit-buku/[id]/EditBukuClient.tsx
 "use client";
 
 import { useState, FormEvent, ChangeEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, CheckCircle, Upload, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, Upload, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 import type { Buku } from "@/types/buku";
 
 interface EditBukuClientProps {
@@ -21,6 +20,8 @@ interface FormData {
 
 export default function EditBukuClient({ buku }: EditBukuClientProps) {
   const router = useRouter();
+  
+  // --- STATE ---
   const [formData, setFormData] = useState<FormData>({
     judul: buku.judul,
     penulis: buku.penulis,
@@ -33,10 +34,17 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
   const [coverUrl, setCoverUrl] = useState<string>(buku.cover || "");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string>("");
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [error, setError] = useState<string>("");
+  
+  // State untuk modal sukses
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // --- HANDLERS ---
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -145,9 +153,9 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
       const result = await response.json();
       console.log("✅ Book updated:", result);
 
-      // Show success and redirect
-      alert("✅ Buku berhasil diupdate!");
-      router.push(`/buku/${buku.id}`);
+      // Tampilkan modal sukses
+      setShowSuccessModal(true);
+
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan");
     } finally {
@@ -155,8 +163,44 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
     }
   };
 
+  // Fungsi navigasi setelah sukses
+  const handleSuccessRedirect = () => {
+    router.refresh(); // Refresh data terbaru agar detail buku update
+    router.replace(`/buku/${buku.id}`); 
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-8">
+      
+      {/* --- SUCCESS MODAL --- */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-sm p-6 flex flex-col items-center text-center space-y-4 animate-in zoom-in-95 duration-300">
+            {/* Icon Sukses */}
+            <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full animate-bounce duration-1000">
+              <CheckCircle2 className="w-10 h-10" />
+            </div>
+            
+            {/* Teks */}
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-foreground">Update Berhasil!</h3>
+              <p className="text-muted-foreground text-sm">
+                Informasi buku <span className="font-semibold text-foreground">"{formData.judul}"</span> telah berhasil diperbarui.
+              </p>
+            </div>
+
+            {/* Tombol OK */}
+            <button
+              onClick={handleSuccessRedirect}
+              className="w-full py-2.5 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-semibold transition-all duration-200 shadow-sm mt-2"
+            >
+              OK, Lihat Detail Buku
+            </button>
+          </div>
+        </div>
+      )}
+      {/* --- END MODAL --- */}
+
       {/* Header */}
       <div className="bg-card border-b border-border/40 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 md:px-8 py-4">
@@ -186,7 +230,7 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm animate-in slide-in-from-top-2">
               {error}
             </div>
           )}
@@ -198,7 +242,7 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
             </label>
             <div className="flex items-start gap-4">
               {/* Current/Preview Cover */}
-              <div className="w-32 h-44 border-2 border-border rounded-lg overflow-hidden bg-muted flex items-center justify-center">
+              <div className="w-32 h-44 border-2 border-border rounded-lg overflow-hidden bg-muted flex items-center justify-center relative group">
                 {coverPreview ? (
                   <img
                     src={coverPreview}
