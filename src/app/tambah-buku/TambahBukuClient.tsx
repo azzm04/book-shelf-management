@@ -40,17 +40,6 @@ export default function TambahBukuClient() {
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Kembali</span>
             </button>
-
-            {currentStep === 2 && (
-              <button
-                type="submit"
-                form="book-form"
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-              >
-                <Save className="w-4 h-4" />
-                Simpan Draft
-              </button>
-            )}
           </div>
         </div>
       </div>
