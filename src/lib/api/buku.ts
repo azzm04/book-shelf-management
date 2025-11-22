@@ -1,4 +1,3 @@
-// lib/api/buku.ts - FIXED VERSION
 import type { Buku } from "@/types/buku";
 import { supabase } from "@/lib/supabase";
 
@@ -38,20 +37,11 @@ export class BukuAPI {
         (categoriesData || []).map((cat) => [cat.id, cat])
       );
 
-      console.log("=== DEBUG getAllBuku ===");
-      console.log("Total books:", booksData.length);
-      console.log("Total categories:", categoriesData?.length || 0);
-      console.log("Categories Map:", Array.from(categoriesMap.entries()));
-
       // Step 3: Map books dengan category
       const books: Buku[] = booksData.map((book) => {
         const category = book.category_id
           ? categoriesMap.get(book.category_id)
           : undefined;
-
-        console.log(
-          `Book: ${book.judul}, category_id: ${book.category_id}, category found: ${category?.name || "NONE"}`
-        );
 
         return {
           id: book.id,
@@ -71,7 +61,6 @@ export class BukuAPI {
         };
       });
 
-
       return books;
     } catch (err) {
       console.error("Error fetching all books from Supabase:", err);
@@ -85,31 +74,10 @@ export class BukuAPI {
   static async getBukuFiksi(): Promise<Buku[]> {
     try {
       const all = await this.getAllBuku();
-
-      console.log("=== DEBUG getBukuFiksi ===");
-      console.log("Total books before filter:", all.length);
-
-      const fiksi = all.filter((b) => {
-        if (!b.category?.name) {
-          console.log(`Book "${b.judul}" has no category`);
-          return false;
-        }
-
-        const categoryName = b.category.name.toLowerCase().trim();
-        const isFiksi = categoryName === "fiksi";
-
-        console.log(
-          `Book: "${b.judul}", Category: "${b.category.name}", Normalized: "${categoryName}", Is Fiksi: ${isFiksi}`
-        );
-
-        return isFiksi;
+      return all.filter((b) => {
+        if (!b.category?.name) return false;
+        return b.category.name.toLowerCase().trim() === "fiksi";
       });
-
-      console.log("Fiksi books found:", fiksi.length);
-      console.log("Fiksi books titles:", fiksi.map((b) => b.judul));
-      console.log("=========================");
-
-      return fiksi;
     } catch (err) {
       console.error("Error fetching fiction books:", err);
       return [];
@@ -122,35 +90,11 @@ export class BukuAPI {
   static async getBukuNonFiksi(): Promise<Buku[]> {
     try {
       const all = await this.getAllBuku();
-
-      console.log("=== DEBUG getBukuNonFiksi ===");
-      console.log("Total books before filter:", all.length);
-
-      const nonFiksi = all.filter((b) => {
-        if (!b.category?.name) {
-          console.log(`Book "${b.judul}" has no category`);
-          return false;
-        }
-
-        const categoryName = b.category.name.toLowerCase().trim();
-        const isNonFiksi =
-          categoryName === "non-fiksi" ||
-          categoryName === "non fiksi" ||
-          categoryName === "nonfiksi" ||
-          categoryName === "nonfiksi";
-
-        console.log(
-          `Book: "${b.judul}", Category: "${b.category.name}", Normalized: "${categoryName}", Is Non-Fiksi: ${isNonFiksi}`
-        );
-
-        return isNonFiksi;
+      return all.filter((b) => {
+        if (!b.category?.name) return false;
+        const name = b.category.name.toLowerCase().trim();
+        return name.includes("non") && name.includes("fiksi");
       });
-
-      console.log("Non-Fiksi books found:", nonFiksi.length);
-      console.log("Non-Fiksi books titles:", nonFiksi.map((b) => b.judul));
-      console.log("=============================");
-
-      return nonFiksi;
     } catch (err) {
       console.error("Error fetching non-fiction books:", err);
       return [];
@@ -158,12 +102,50 @@ export class BukuAPI {
   }
 
   /**
-   * Fetch buku by ID
+   * Fetch buku by ID (OPTIMIZED)
+   * Mengambil langsung 1 data buku tanpa meload semua data
    */
   static async getBukuById(id: string): Promise<Buku | null> {
     try {
-      const allBuku = await this.getAllBuku();
-      return allBuku.find((book) => book.id === id) || null;
+      // 1. Fetch single book by ID
+      const { data: book, error } = await supabase
+        .from("books")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error || !book) {
+        console.error("Book not found or error:", error);
+        return null;
+      }
+
+      // 2. Fetch category if exists
+      let category = undefined;
+      if (book.category_id) {
+        const { data: catData } = await supabase
+          .from("categories")
+          .select("*")
+          .eq("id", book.category_id)
+          .single();
+        
+        if (catData) {
+          category = { id: catData.id, name: catData.name };
+        }
+      }
+
+      // 3. Return combined data
+      return {
+        id: book.id,
+        judul: book.judul,
+        penulis: book.penulis,
+        penerbit: book.penerbit,
+        tahun: book.tahun,
+        deskripsi: book.deskripsi,
+        cover: book.cover,
+        category_id: book.category_id,
+        category: category,
+      };
+
     } catch (err) {
       console.error("Error fetching book by id from Supabase:", err);
       return null;
@@ -178,14 +160,29 @@ export class BukuAPI {
     penulis: string
   ): Promise<Buku[]> {
     try {
-      const allBuku = await this.getAllBuku();
-      return allBuku
-        .filter(
-          (buku) =>
-            buku.id !== bukuId &&
-            buku.penulis.toLowerCase() === penulis.toLowerCase()
-        )
-        .slice(0, 4);
+      // Menggunakan query spesifik untuk related books agar lebih efisien
+      const { data: booksData } = await supabase
+        .from("books")
+        .select("*")
+        .ilike('penulis', penulis) // ilike = case insensitive
+        .neq('id', bukuId)
+        .limit(4);
+
+      if (!booksData) return [];
+
+      // Sederhanakan return karena related books biasanya hanya butuh cover/judul
+      // Kita kembalikan sebagai tipe Buku (category opsional di sini)
+      return booksData.map(b => ({
+        id: b.id,
+        judul: b.judul,
+        penulis: b.penulis,
+        penerbit: b.penerbit,
+        tahun: b.tahun,
+        deskripsi: b.deskripsi,
+        cover: b.cover,
+        category_id: b.category_id,
+      })) as Buku[];
+
     } catch (error) {
       console.error("Error fetching related buku:", error);
       return [];

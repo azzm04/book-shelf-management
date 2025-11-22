@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import EditBukuClient from "./EditBukuClient";
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   try {
