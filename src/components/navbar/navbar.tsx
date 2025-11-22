@@ -12,6 +12,7 @@ export default function Navbar() {
     if (pathname.startsWith("/fiksi")) return "fiksi"
     if (pathname.startsWith("/nonfiksi")) return "nonfiksi"
     if (pathname.startsWith("/profile")) return "profile"
+    if (pathname.startsWith("/about")) return "about"
     if (pathname.startsWith("/favorites")) return "favorites"
     return "home"
   }
