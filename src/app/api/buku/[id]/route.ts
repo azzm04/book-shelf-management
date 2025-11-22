@@ -1,11 +1,11 @@
-// app/api/buku/[id]/route.ts (Update existing file)
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { revalidatePath } from 'next/cache';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// GET - Existing code (keep as is)
+// GET - Get Single Book
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -53,7 +53,7 @@ export async function GET(
   }
 }
 
-// PUT/PATCH - Update book (NEW)
+// PUT - Update Book
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -62,13 +62,10 @@ export async function PUT(
     console.log('📝 Update book API called for ID:', params.id);
 
     const body = await request.json();
-    console.log('📝 Request body:', body);
-
     const { judul, penulis, penerbit, tahun, deskripsi, cover, category_name } = body;
 
     // Validate required fields
     if (!judul || !penulis || !penerbit || !tahun) {
-      console.error('❌ Missing required fields');
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
@@ -78,7 +75,6 @@ export async function PUT(
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Get category ID by name
-    console.log('🔍 Finding category:', category_name);
     const { data: category, error: categoryError } = await supabase
       .from('categories')
       .select('id')
@@ -86,17 +82,13 @@ export async function PUT(
       .single();
 
     if (categoryError || !category) {
-      console.error('❌ Category not found:', category_name);
       return NextResponse.json(
         { success: false, error: 'Invalid category' },
         { status: 400 }
       );
     }
 
-    console.log('✅ Category found:', category.id);
-
     // Update book
-    console.log('💾 Updating book...');
     const { data, error } = await supabase
       .from('books')
       .update({
@@ -110,28 +102,16 @@ export async function PUT(
         updated_at: new Date().toISOString(),
       })
       .eq('id', params.id)
-      .select(`
-        id,
-        judul,
-        penulis,
-        penerbit,
-        tahun,
-        deskripsi,
-        cover,
-        category_id,
-        categories (
-          id,
-          name
-        )
-      `)
+      .select()
       .single();
 
-    if (error) {
-      console.error('❌ Update error:', error);
-      throw error;
-    }
+    if (error) throw error;
 
-    console.log('✅ Book updated:', data);
+    // REVALIDATE CACHE: Agar data di halaman depan & detail langsung berubah
+    revalidatePath('/');
+    revalidatePath('/fiksi');
+    revalidatePath('/nonfiksi');
+    revalidatePath(`/buku/${params.id}`);
 
     return NextResponse.json({
       success: true,
@@ -147,7 +127,7 @@ export async function PUT(
   }
 }
 
-// DELETE - Existing code (keep if you have it)
+// DELETE - Delete Book
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -155,14 +135,14 @@ export async function DELETE(
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Optional: Get book first to delete cover from storage
+    // 1. Get book first to identify cover image
     const { data: book } = await supabase
       .from('books')
       .select('cover')
       .eq('id', params.id)
       .single();
 
-    // Delete book from database
+    // 2. Delete book from database
     const { error } = await supabase
       .from('books')
       .delete()
@@ -170,7 +150,7 @@ export async function DELETE(
 
     if (error) throw error;
 
-    // Optional: Delete cover from storage if exists
+    // 3. Delete cover from storage if exists (Cleanup)
     if (book?.cover && book.cover.includes('book-covers')) {
       const fileName = book.cover.split('/').pop();
       if (fileName) {
@@ -179,6 +159,11 @@ export async function DELETE(
           .remove([fileName]);
       }
     }
+
+    // 4. REVALIDATE CACHE: Penting agar buku hilang dari list
+    revalidatePath('/');
+    revalidatePath('/fiksi');
+    revalidatePath('/nonfiksi');
 
     return NextResponse.json({
       success: true,
