@@ -1,10 +1,8 @@
 // app/ClientHomePage.tsx
 "use client";
 
-import { useState, useEffect } from "react";
 import { BookOpen, Sparkles, Library, ArrowRight } from "lucide-react";
 import BookCard from "@/components/buku/BookCard";
-import { SplashScreen } from "@/components/splash/splash-screen.tsx";
 import type { Buku } from "@/types/buku";
 
 interface ClientHomePageProps {
@@ -14,38 +12,12 @@ interface ClientHomePageProps {
   totalNonFiksi: number;
 }
 
-
 export default function ClientHomePage({
   bukuTerpilih,
   totalBuku,
   totalFiksi,
   totalNonFiksi,
 }: ClientHomePageProps) {
-  const [hydrated, setHydrated] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
-
-  // Only run on client — AFTER hydration
-  useEffect(() => {
-    setHydrated(true);
-
-    const alreadyShown = localStorage.getItem("splash-shown");
-    if (alreadyShown) {
-      setShowSplash(false);
-    } else {
-      setShowSplash(true);
-    }
-  }, []);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-    localStorage.setItem("splash-shown", "true");
-  };
-
-  if (!hydrated) return null;
-
-  if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />;
-  }
 
   const handleLihatDetail = () => {
     window.location.href = "/fiksi";

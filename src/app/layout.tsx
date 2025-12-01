@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import { SplashWrapper } from "@/components/splash/SplashWrapper"; // ← Import ini
 import { Toaster } from "sonner";
 import { FavoritesProvider } from "./context/FavoritesContext";
 
@@ -35,11 +36,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
       </head>
       <body className="font-sans antialiased">
-        <FavoritesProvider>
-        <ClientLayout>{children}</ClientLayout>
-        <Toaster />
-        </FavoritesProvider>
-        <Analytics />
+        <SplashWrapper> 
+            <FavoritesProvider>
+            <ClientLayout>{children}</ClientLayout>
+            <Toaster />
+            </FavoritesProvider>
+          <Analytics />
+        </SplashWrapper>
       </body>
     </html>
   );
