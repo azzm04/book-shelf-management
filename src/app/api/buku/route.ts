@@ -1,43 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { revalidatePath } from 'next/cache';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
+import { checkAdminRole } from "@/lib/auth-server"; // Import helper
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// GET - Fetch all books
 export async function GET() {
+  // ... (Kode GET biarkan saja, semua orang boleh baca)
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
-
     const { data, error } = await supabase
-      .from('books')
-      .select(`
-        id,
-        judul,
-        penulis,
-        penerbit,
-        tahun,
-        deskripsi,
-        cover,
-        category_id,
-        categories (
-          id,
-          name
-        ),
-        link_eksternal
-      `)
-      .order('created_at', { ascending: false });
+      .from("books")
+      .select(
+        `
+        id, judul, penulis, penerbit, tahun, deskripsi, cover, category_id, link_eksternal,
+        categories ( id, name )
+      `
+      )
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
-
     return NextResponse.json({
       success: true,
       total: data?.length || 0,
       data: data || [],
     });
   } catch (error: any) {
-    console.error('❌ GET books error:', error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 }
@@ -45,56 +34,70 @@ export async function GET() {
   }
 }
 
-// POST - Create new book
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { judul, penulis, penerbit, tahun, deskripsi, cover, category_name, link_eksternal } = body;
+    // --- 1. CEK OTORISASI ADMIN ---
+    const authHeader = request.headers.get("Authorization");
+    const { isAdmin, error: authError } = await checkAdminRole(authHeader);
 
-    // Validasi field wajib
+    if (!isAdmin) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            authError || "Forbidden: Hanya Admin yang boleh menambah buku.",
+        },
+        { status: 403 } // 403 Forbidden
+      );
+    }
+    // -----------------------------
+
+    const body = await request.json();
+    const {
+      judul,
+      penulis,
+      penerbit,
+      tahun,
+      deskripsi,
+      cover,
+      category_name,
+      link_eksternal,
+    } = body;
+
+    // ... (Sisa kode validasi & insert sama persis seperti sebelumnya) ...
+    // ... Copy paste logika insert Anda di sini ...
+
+    // Validate required fields
     if (!judul || !penulis || !penerbit || !tahun || !category_name) {
       return NextResponse.json(
-        { success: false, error: 'Mohon lengkapi field wajib (*)' },
+        { success: false, error: "Missing required fields" },
         { status: 400 }
       );
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 1. LOGIKA KATEGORI (ROBUST)
-    // Cari dulu apakah kategori sudah ada
+    // ... Logika Kategori & Insert Buku ...
     let categoryId;
-    
     const { data: existingCategory } = await supabase
-      .from('categories')
-      .select('id')
-      .eq('name', category_name)
+      .from("categories")
+      .select("id")
+      .eq("name", category_name)
       .single();
-
     if (existingCategory) {
-      // Jika ada, gunakan ID-nya
       categoryId = existingCategory.id;
     } else {
-      // Jika tidak ada, BUAT BARU (Ini mencegah error jika kategori baru ditambah di frontend)
       const { data: newCategory, error: createCatError } = await supabase
-        .from('categories')
+        .from("categories")
         .insert({ name: category_name })
         .select()
         .single();
-      
-      if (createCatError) {
-        console.error('❌ Error creating category:', createCatError);
-        return NextResponse.json(
-          { success: false, error: 'Gagal memproses kategori' },
-          { status: 500 }
-        );
-      }
+      if (createCatError) throw createCatError;
       categoryId = newCategory.id;
     }
 
-    // 2. Insert Buku Baru
     const { data, error } = await supabase
-      .from('books')
+      .from("books")
       .insert({
         judul,
         penulis,
@@ -102,57 +105,39 @@ export async function POST(request: NextRequest) {
         tahun: parseInt(tahun),
         deskripsi: deskripsi || null,
         cover: cover || null,
-        link_eksternal: link_eksternal || null, // Field Link Eksternal
+        link_eksternal: link_eksternal || null,
         category_id: categoryId,
         created_at: new Date().toISOString(),
       })
-      .select(`
-        id,
-        judul,
-        penulis,
-        penerbit,
-        tahun,
-        deskripsi,
-        cover,
-        category_id,
-        categories (
-          id,
-          name
-        ),
-        link_eksternal
-      `)
+      .select()
       .single();
 
     if (error) throw error;
 
-    // 3. Revalidate Cache
-    revalidatePath('/');
-    revalidatePath('/fiksi');
-    revalidatePath('/nonfiksi');
+    revalidatePath("/");
+    revalidatePath("/fiksi");
+    revalidatePath("/nonfiksi");
 
-    return NextResponse.json({
-      success: true,
-      message: 'Buku berhasil ditambahkan',
-      data,
-    }, { status: 201 });
-
-  } catch (error: any) {
-    console.error('❌ Create book error:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Internal Server Error' },
+      { success: true, message: "Buku berhasil ditambahkan", data },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error("❌ Create book error:", error);
+    return NextResponse.json(
+      { success: false, error: error.message || "Internal Server Error" },
       { status: 500 }
     );
   }
 }
 
-// Handle OPTIONS for CORS
 export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization", // Tambahkan Authorization
     },
   });
 }

@@ -2,10 +2,19 @@
 
 import { useState, FormEvent, ChangeEvent, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  ArrowLeft, Loader2, Upload, Image as ImageIcon, 
-  CheckCircle2, Link as LinkIcon, Check, AlertCircle,
-  Save, RotateCcw, AlertTriangle, X
+import {
+  ArrowLeft,
+  Loader2,
+  Upload,
+  Image as ImageIcon,
+  CheckCircle2,
+  Link as LinkIcon,
+  Check,
+  AlertCircle,
+  Save,
+  RotateCcw,
+  AlertTriangle,
+  X,
 } from "lucide-react";
 
 interface FormData {
@@ -36,13 +45,13 @@ export default function TambahBukuClient() {
 
   const [coverUrl, setCoverUrl] = useState<string>("");
   const [coverPreview, setCoverPreview] = useState<string>("");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [error, setError] = useState<string>("");
-  
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  
+
   // State untuk Modal Reset
   const [showResetModal, setShowResetModal] = useState(false);
 
@@ -62,7 +71,7 @@ export default function TambahBukuClient() {
         setCoverPreview(draft.coverPreview || "");
         setHasDraft(true);
         setShowDraftNotification(true);
-        
+
         // Auto-hide notifikasi setelah 5 detik
         setTimeout(() => setShowDraftNotification(false), 5000);
       } catch (error) {
@@ -74,8 +83,14 @@ export default function TambahBukuClient() {
   // --- AUTO-SAVE DRAFT SETIAP KALI ADA PERUBAHAN ---
   useEffect(() => {
     // Jangan save jika semua field kosong
-    const hasContent = formData.judul || formData.penulis || formData.penerbit || formData.deskripsi || formData.link_eksternal || coverUrl;
-    
+    const hasContent =
+      formData.judul ||
+      formData.penulis ||
+      formData.penerbit ||
+      formData.deskripsi ||
+      formData.link_eksternal ||
+      coverUrl;
+
     if (hasContent) {
       const draft = {
         formData,
@@ -115,7 +130,7 @@ export default function TambahBukuClient() {
     setCoverUrl("");
     setCoverPreview("");
     clearDraft();
-    
+
     // Tutup modal setelah reset
     setShowResetModal(false);
   };
@@ -184,7 +199,12 @@ export default function TambahBukuClient() {
     setError("");
 
     try {
-      if (!formData.judul || !formData.penulis || !formData.penerbit || !formData.tahun) {
+      if (
+        !formData.judul ||
+        !formData.penulis ||
+        !formData.penerbit ||
+        !formData.tahun
+      ) {
         setError("Mohon lengkapi semua field bertanda bintang (*)");
         setIsSubmitting(false);
         return;
@@ -197,7 +217,7 @@ export default function TambahBukuClient() {
         link_eksternal: formData.link_eksternal,
       };
 
-      const response = await fetch("/api/buku", { 
+      const response = await fetch("/api/buku", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -211,7 +231,6 @@ export default function TambahBukuClient() {
       // Hapus draft setelah berhasil submit
       clearDraft();
       setShowSuccessModal(true);
-
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan saat menyimpan buku");
     } finally {
@@ -226,7 +245,6 @@ export default function TambahBukuClient() {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-8">
-      
       {/* --- DRAFT NOTIFICATION --- */}
       {showDraftNotification && (
         <div className="fixed top-20 right-4 z-50 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg shadow-lg animate-in slide-in-from-right duration-300 max-w-sm">
@@ -234,9 +252,11 @@ export default function TambahBukuClient() {
             <Save className="w-5 h-5 mt-0.5 shrink-0" />
             <div className="flex-1">
               <p className="font-semibold text-sm">Draft Ditemukan!</p>
-              <p className="text-xs mt-1">Data form Anda telah dipulihkan dari draft terakhir.</p>
+              <p className="text-xs mt-1">
+                Data form Anda telah dipulihkan dari draft terakhir.
+              </p>
             </div>
-            <button 
+            <button
               onClick={() => setShowDraftNotification(false)}
               className="text-blue-400 hover:text-blue-600"
             >
@@ -250,12 +270,10 @@ export default function TambahBukuClient() {
       {showResetModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-sm p-6 relative animate-in zoom-in-95 duration-200">
-            
             {/* Close Button (X) */}
-            <button 
-              onClick={() => setShowResetModal(false)} 
+            <button
+              onClick={() => setShowResetModal(false)}
               className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="close modal"
             >
               <X className="w-5 h-5" />
             </button>
@@ -265,11 +283,14 @@ export default function TambahBukuClient() {
               <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-full shadow-sm">
                 <AlertTriangle className="w-8 h-8" />
               </div>
-              
+
               <div className="space-y-2">
-                <h3 className="text-xl font-bold text-foreground">Reset Data?</h3>
+                <h3 className="text-xl font-bold text-foreground">
+                  Reset Data?
+                </h3>
                 <p className="text-muted-foreground text-sm">
-                  Apakah Anda yakin ingin menghapus semua data yang telah diisi? Tindakan ini tidak dapat dibatalkan.
+                  Apakah Anda yakin ingin menghapus semua data yang telah diisi?
+                  Tindakan ini tidak dapat dibatalkan.
                 </p>
               </div>
 
@@ -300,11 +321,17 @@ export default function TambahBukuClient() {
             <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full animate-bounce duration-1000">
               <CheckCircle2 className="w-10 h-10" />
             </div>
-            
+
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-foreground">Berhasil Ditambahkan!</h3>
+              <h3 className="text-xl font-bold text-foreground">
+                Berhasil Ditambahkan!
+              </h3>
               <p className="text-muted-foreground text-sm">
-                Buku <span className="font-semibold text-foreground">"{formData.judul}"</span> telah berhasil ditambahkan ke koleksi Anda.
+                Buku{" "}
+                <span className="font-semibold text-foreground">
+                  "{formData.judul}"
+                </span>{" "}
+                telah berhasil ditambahkan ke koleksi Anda.
               </p>
             </div>
 
@@ -340,7 +367,6 @@ export default function TambahBukuClient() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 md:px-8 py-8">
-        
         {/* Title Section */}
         <div className="mb-8 flex items-start justify-between">
           <div>
@@ -368,24 +394,36 @@ export default function TambahBukuClient() {
         {/* Stepper Visual */}
         <div className="flex items-center justify-between mb-8 relative">
           <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-border -z-10" />
-          
+
           <div className="flex items-center gap-2 bg-background pr-4">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${coverUrl ? 'bg-primary text-primary-foreground' : 'bg-primary text-primary-foreground'}`}>
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                coverUrl
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-primary text-primary-foreground"
+              }`}
+            >
               {coverUrl ? <Check className="w-5 h-5" /> : "1"}
             </div>
-            <span className="text-sm font-medium text-foreground">Upload Cover</span>
+            <span className="text-sm font-medium text-foreground">
+              Upload Cover
+            </span>
           </div>
 
           <div className="flex items-center gap-2 bg-background pl-4">
             <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
               2
             </div>
-            <span className="text-sm font-medium text-foreground">Isi Form</span>
+            <span className="text-sm font-medium text-foreground">
+              Isi Form
+            </span>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-card border border-border rounded-xl p-6 md:p-8 space-y-6 shadow-sm">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="bg-card border border-border rounded-xl p-6 md:p-8 space-y-6 shadow-sm"
+        >
           {/* Error Banner */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-center gap-2 animate-in fade-in">
@@ -396,7 +434,7 @@ export default function TambahBukuClient() {
 
           {/* Cover Upload Section */}
           {!coverUrl ? (
-            <div 
+            <div
               onClick={() => fileInputRef.current?.click()}
               className="border-2 border-dashed border-border hover:border-primary/50 hover:bg-accent/50 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all group"
             >
@@ -407,13 +445,21 @@ export default function TambahBukuClient() {
                   <Upload className="w-8 h-8 text-muted-foreground group-hover:text-primary" />
                 )}
               </div>
-              <h3 className="font-semibold text-foreground">Upload Cover Buku</h3>
-              <p className="text-sm text-muted-foreground mt-1">Klik untuk memilih file (Max 5MB)</p>
+              <h3 className="font-semibold text-foreground">
+                Upload Cover Buku
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Klik untuk memilih file (Max 5MB)
+              </p>
             </div>
           ) : (
             <div className="bg-green-50/50 border border-green-200 rounded-lg p-4 flex items-start gap-4">
               <div className="w-16 h-24 bg-muted rounded overflow-hidden shrink-0 border border-border shadow-sm">
-                <img src={coverPreview || coverUrl} alt="Preview" className="w-full h-full object-cover" />
+                <img
+                  src={coverPreview || coverUrl}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex-1">
                 <h3 className="text-green-700 font-semibold flex items-center gap-2 text-sm mb-1">
@@ -423,8 +469,8 @@ export default function TambahBukuClient() {
                   Silakan isi form di bawah untuk melengkapi detail buku
                 </p>
               </div>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => fileInputRef.current?.click()}
                 className="text-xs font-medium text-primary hover:underline flex items-center gap-1"
               >
@@ -432,7 +478,7 @@ export default function TambahBukuClient() {
               </button>
             </div>
           )}
-          
+
           <input
             ref={fileInputRef}
             type="file"
@@ -444,7 +490,6 @@ export default function TambahBukuClient() {
 
           {/* Form Fields */}
           <div className="space-y-5 pt-2">
-            
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">
                 Judul Buku <span className="text-red-500">*</span>
@@ -533,7 +578,8 @@ export default function TambahBukuClient() {
                 />
               </div>
               <p className="text-[11px] text-muted-foreground">
-                Opsional: Masukkan link ke Google Books atau sumber online lainnya.
+                Opsional: Masukkan link ke Google Books atau sumber online
+                lainnya.
               </p>
             </div>
 
@@ -553,7 +599,6 @@ export default function TambahBukuClient() {
                 {formData.deskripsi.length} karakter
               </div>
             </div>
-
           </div>
 
           <button
@@ -573,7 +618,6 @@ export default function TambahBukuClient() {
               </>
             )}
           </button>
-
         </form>
       </div>
     </div>

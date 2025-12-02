@@ -2,7 +2,15 @@
 
 import { useState, FormEvent, ChangeEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, CheckCircle, Upload, Image as ImageIcon, CheckCircle2, Link as LinkIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  CheckCircle,
+  Upload,
+  Image as ImageIcon,
+  CheckCircle2,
+  Link as LinkIcon,
+} from "lucide-react";
 import type { Buku } from "@/types/buku";
 
 interface EditBukuClientProps {
@@ -21,7 +29,7 @@ interface FormData {
 
 export default function EditBukuClient({ buku }: EditBukuClientProps) {
   const router = useRouter();
-  
+
   // --- STATE ---
   const [formData, setFormData] = useState<FormData>({
     judul: buku.judul,
@@ -36,14 +44,14 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
   const [coverUrl, setCoverUrl] = useState<string>(buku.cover || "");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string>("");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [error, setError] = useState<string>("");
-  
+
   // State untuk modal sukses
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // --- HANDLERS ---
@@ -158,7 +166,6 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
 
       // Tampilkan modal sukses
       setShowSuccessModal(true);
-
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan");
     } finally {
@@ -168,13 +175,12 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
 
   // Fungsi navigasi setelah sukses
   const handleSuccessRedirect = () => {
-    router.refresh(); 
-    router.replace(`/buku/${buku.id}`); 
+    router.refresh();
+    router.replace(`/buku/${buku.id}`);
   };
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-8">
-      
       {/* --- SUCCESS MODAL --- */}
       {showSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
@@ -183,9 +189,15 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
               <CheckCircle2 className="w-10 h-10" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-foreground">Update Berhasil!</h3>
+              <h3 className="text-xl font-bold text-foreground">
+                Update Berhasil!
+              </h3>
               <p className="text-muted-foreground text-sm">
-                Informasi buku <span className="font-semibold text-foreground">"{formData.judul}"</span> telah berhasil diperbarui.
+                Informasi buku{" "}
+                <span className="font-semibold text-foreground">
+                  "{formData.judul}"
+                </span>{" "}
+                telah berhasil diperbarui.
               </p>
             </div>
             <button
@@ -240,9 +252,17 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
             <div className="flex items-start gap-4">
               <div className="w-32 h-44 border-2 border-border rounded-lg overflow-hidden bg-muted flex items-center justify-center relative group">
                 {coverPreview ? (
-                  <img src={coverPreview} alt="Preview" className="w-full h-full object-cover" />
+                  <img
+                    src={coverPreview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
                 ) : coverUrl ? (
-                  <img src={coverUrl} alt="Current cover" className="w-full h-full object-cover" />
+                  <img
+                    src={coverUrl}
+                    alt="Current cover"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <ImageIcon className="w-12 h-12 text-muted-foreground" />
                 )}
@@ -254,7 +274,6 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
                   accept="image/jpeg,image/jpg,image/png,image/webp"
                   onChange={handleFileChange}
                   className="hidden"
-                  aria-label="Pilih cover buku"
                 />
                 <button
                   type="button"
@@ -285,7 +304,10 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
           <div className="bg-card rounded-lg border border-border p-6 space-y-5">
             {/* Judul */}
             <div>
-              <label htmlFor="judul" className="block text-sm font-medium text-foreground mb-2">
+              <label
+                htmlFor="judul"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
                 Judul Buku <span className="text-red-500">*</span>
               </label>
               <input
@@ -301,7 +323,10 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
 
             {/* Penulis */}
             <div>
-              <label htmlFor="penulis" className="block text-sm font-medium text-foreground mb-2">
+              <label
+                htmlFor="penulis"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
                 Penulis <span className="text-red-500">*</span>
               </label>
               <input
@@ -317,7 +342,10 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
 
             {/* Penerbit */}
             <div>
-              <label htmlFor="penerbit" className="block text-sm font-medium text-foreground mb-2">
+              <label
+                htmlFor="penerbit"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
                 Penerbit <span className="text-red-500">*</span>
               </label>
               <input
@@ -334,7 +362,10 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
             {/* Tahun & Kategori */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="tahun" className="block text-sm font-medium text-foreground mb-2">
+                <label
+                  htmlFor="tahun"
+                  className="block text-sm font-medium text-foreground mb-2"
+                >
                   Tahun Terbit <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -351,7 +382,10 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
               </div>
 
               <div>
-                <label htmlFor="category_name" className="block text-sm font-medium text-foreground mb-2">
+                <label
+                  htmlFor="category_name"
+                  className="block text-sm font-medium text-foreground mb-2"
+                >
                   Kategori <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -370,31 +404,38 @@ export default function EditBukuClient({ buku }: EditBukuClientProps) {
 
             {/* Link Eksternal (FIELD BARU) */}
             <div>
-                <label htmlFor="link_eksternal" className="block text-sm font-medium text-foreground mb-2">
-                  Link Baca / Sumber Buku
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LinkIcon className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <input
-                    id="link_eksternal"
-                    name="link_eksternal"
-                    type="url"
-                    placeholder="https://books.google.com/..."
-                    value={formData.link_eksternal}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 px-4 py-2.5 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-foreground"
-                  />
+              <label
+                htmlFor="link_eksternal"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
+                Link Baca / Sumber Buku
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <LinkIcon className="h-5 w-5 text-muted-foreground" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Masukkan link ke Google Books, Project Gutenberg, atau toko buku online.
-                </p>
+                <input
+                  id="link_eksternal"
+                  name="link_eksternal"
+                  type="url"
+                  placeholder="https://books.google.com/..."
+                  value={formData.link_eksternal}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 px-4 py-2.5 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-foreground"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Masukkan link ke Google Books, Project Gutenberg, atau toko buku
+                online.
+              </p>
             </div>
 
             {/* Deskripsi */}
             <div>
-              <label htmlFor="deskripsi" className="block text-sm font-medium text-foreground mb-2">
+              <label
+                htmlFor="deskripsi"
+                className="block text-sm font-medium text-foreground mb-2"
+              >
                 Deskripsi
               </label>
               <textarea

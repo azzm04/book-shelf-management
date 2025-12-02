@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { revalidatePath } from 'next/cache';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
+import { checkAdminRole } from "@/lib/auth-server"; // Import helper
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -14,8 +15,9 @@ export async function GET(
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const { data, error } = await supabase
-      .from('books')
-      .select(`
+      .from("books")
+      .select(
+        `
         id,
         judul,
         penulis,
@@ -24,20 +26,21 @@ export async function GET(
         deskripsi,
         cover,
         category_id,
-        link_eksternal,  // PENTING: Pastikan ini ada
+        link_eksternal,
         categories (
           id,
           name
         )
-      `)
-      .eq('id', params.id)
+      `
+      )
+      .eq("id", params.id)
       .single();
 
     if (error) throw error;
 
     if (!data) {
       return NextResponse.json(
-        { success: false, error: 'Book not found' },
+        { success: false, error: "Book not found" },
         { status: 404 }
       );
     }
@@ -60,16 +63,41 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    console.log('📝 Update book API called for ID:', params.id);
+    // --- CEK ADMIN ---
+    const authHeader = request.headers.get("Authorization");
+    const { isAdmin, error: authError } = await checkAdminRole(authHeader);
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            authError || "Forbidden: Hanya Admin yang boleh mengupdate buku.",
+        },
+        { status: 403 }
+      );
+    }
+    // -----------------
+
+    console.log("📝 Update book API called for ID:", params.id);
 
     const body = await request.json();
-    // Ambil link_eksternal dari body
-    const { judul, penulis, penerbit, tahun, deskripsi, cover, category_name, link_eksternal } = body;
+    // Tambahkan link_eksternal di sini agar terbaca dari body request
+    const {
+      judul,
+      penulis,
+      penerbit,
+      tahun,
+      deskripsi,
+      cover,
+      category_name,
+      link_eksternal,
+    } = body;
 
     // Validate required fields
     if (!judul || !penulis || !penerbit || !tahun) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: "Missing required fields" },
         { status: 400 }
       );
     }
@@ -78,21 +106,21 @@ export async function PUT(
 
     // Get category ID by name
     const { data: category, error: categoryError } = await supabase
-      .from('categories')
-      .select('id')
-      .eq('name', category_name)
+      .from("categories")
+      .select("id")
+      .eq("name", category_name)
       .single();
 
     if (categoryError || !category) {
       return NextResponse.json(
-        { success: false, error: 'Invalid category' },
+        { success: false, error: "Invalid category" },
         { status: 400 }
       );
     }
 
     // Update book
     const { data, error } = await supabase
-      .from('books')
+      .from("books")
       .update({
         judul,
         penulis,
@@ -100,29 +128,29 @@ export async function PUT(
         tahun: parseInt(tahun),
         deskripsi: deskripsi || null,
         cover: cover || null,
-        link_eksternal: link_eksternal || null, // PENTING: Masukkan ini ke database
+        link_eksternal: link_eksternal || null, // Pastikan ini ikut di-update
         category_id: category.id,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', params.id)
+      .eq("id", params.id)
       .select()
       .single();
 
     if (error) throw error;
 
     // REVALIDATE CACHE: Agar data di halaman depan & detail langsung berubah
-    revalidatePath('/');
-    revalidatePath('/fiksi');
-    revalidatePath('/nonfiksi');
+    revalidatePath("/");
+    revalidatePath("/fiksi");
+    revalidatePath("/nonfiksi");
     revalidatePath(`/buku/${params.id}`);
 
     return NextResponse.json({
       success: true,
-      message: 'Book updated successfully',
+      message: "Book updated successfully",
       data,
     });
   } catch (error: any) {
-    console.error('❌ Update book error:', error);
+    console.error("❌ Update book error:", error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 }
@@ -136,41 +164,52 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    // --- CEK ADMIN ---
+    const authHeader = request.headers.get("Authorization");
+    const { isAdmin, error: authError } = await checkAdminRole(authHeader);
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            authError || "Forbidden: Hanya Admin yang boleh menghapus buku.",
+        },
+        { status: 403 }
+      );
+    }
+    // -----------------
+
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // 1. Get book first to identify cover image
     const { data: book } = await supabase
-      .from('books')
-      .select('cover')
-      .eq('id', params.id)
+      .from("books")
+      .select("cover")
+      .eq("id", params.id)
       .single();
 
     // 2. Delete book from database
-    const { error } = await supabase
-      .from('books')
-      .delete()
-      .eq('id', params.id);
+    const { error } = await supabase.from("books").delete().eq("id", params.id);
 
     if (error) throw error;
 
     // 3. Delete cover from storage if exists (Cleanup)
-    if (book?.cover && book.cover.includes('book-covers')) {
-      const fileName = book.cover.split('/').pop();
+    if (book?.cover && book.cover.includes("book-covers")) {
+      const fileName = book.cover.split("/").pop();
       if (fileName) {
-        await supabase.storage
-          .from('book-covers')
-          .remove([fileName]);
+        await supabase.storage.from("book-covers").remove([fileName]);
       }
     }
 
     // 4. REVALIDATE CACHE: Penting agar buku hilang dari list
-    revalidatePath('/');
-    revalidatePath('/fiksi');
-    revalidatePath('/nonfiksi');
+    revalidatePath("/");
+    revalidatePath("/fiksi");
+    revalidatePath("/nonfiksi");
 
     return NextResponse.json({
       success: true,
-      message: 'Book deleted successfully',
+      message: "Book deleted successfully",
     });
   } catch (error: any) {
     return NextResponse.json(
